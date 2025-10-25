@@ -48,7 +48,10 @@ def sepia(image: MatLike) -> MatLike:
         [[0.272, 0.534, 0.131], [0.349, 0.686, 0.168], [0.393, 0.769, 0.189]],
         dtype=np.float32,
     )
-    sepiaImage = np.dot(image.astype(np.float32), sepiaMatrix.T)
+
+    imageCopy = image.copy()
+
+    sepiaImage = np.dot(imageCopy.astype(np.float32), sepiaMatrix.T)
 
     sepiaImage = np.clip(sepiaImage, 0, 255)
 
@@ -71,7 +74,7 @@ def addVignette(image: MatLike, radius: float, opacity: float = 0.5) -> MatLike:
 
     mask = np.exp(-distanceFromCenter / (2 * opacity))[:, :, np.newaxis].astype(float)
 
-    return (image.astype(float) * mask).astype(np.uint8)
+    return (image.copy().astype(float) * mask).astype(np.uint8)
 
 
 def pixelate(
@@ -151,7 +154,7 @@ def addGlare(image: MatLike, opacity: float = 0.5) -> MatLike:
 
     glareMask *= opacity
 
-    combination = 255.0 - (255.0 - image.astype(np.float32)) * (1.0 - glareMask)
+    combination = 255.0 - (255.0 - image.copy().astype(np.float32)) * (1.0 - glareMask)
 
     return combination.astype(np.uint8)
 
@@ -167,6 +170,6 @@ def addWatercolor(image: MatLike, opacity: float = 0.3) -> MatLike:
 
     mask *= opacity
 
-    combination = 255.0 - (255.0 - image.astype(np.float32)) * (1.0 - mask)
+    combination = 255.0 - (255.0 - image.copy().astype(np.float32)) * (1.0 - mask)
 
     return combination.astype(np.uint8)
